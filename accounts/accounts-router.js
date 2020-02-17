@@ -29,6 +29,7 @@ router.get("/:id", (req, res) => {
 
 });
 
+// Tested
 router.post("/", (req, res) => {
     db("accounts")
     .insert(req.body, "id")
@@ -44,21 +45,37 @@ router.post("/", (req, res) => {
       });
 })
 
+// Tested
 router.put("/:id", (req, res) =>{
     const { id } = req.params
     const change = req.body
     db("accounts")
-        .where(id)
-        .insert(change)
+        .where({ id })
+        .update(change)
         .then(account => {
             res.status(200).json(account);
         })
         .catch(err => { 
             console.log(err)
-            res.status(500).json({ error: "failed to get the account info" });
+            res.status(500).json({ error: "failed to update" });
         })
 })
 
+
+router.delete("/:id", (req, res) => {
+    const{ id } = req.params
+    db("accounts")
+        .where({ id })
+        .delete()
+        .then(deleted => {
+            res.status(201).json(deleted)
+        })
+        .catch(err => { 
+            console.log(err)
+            res.status(500).json({ error: "failed to delete" });
+        })
+
+})
 
 module.exports = router
 
